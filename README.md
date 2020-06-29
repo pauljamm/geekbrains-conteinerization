@@ -1,3 +1,3 @@
 # geekbrains-conteinerization
 
-Repo for Geekbrains "Microservices and Containerization" cource.
+Repo for Geekbrains "Microservices and Containerization" course.
