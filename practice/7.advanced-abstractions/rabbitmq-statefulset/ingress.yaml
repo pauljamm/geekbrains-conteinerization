@@ -1,0 +1,12 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rabbitmq
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: rabbitmq
+          servicePort: 15672
