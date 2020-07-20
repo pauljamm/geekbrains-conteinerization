@@ -8,6 +8,6 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: app
+              serviceName: geekbrains
               servicePort: 8000
             path: /users
