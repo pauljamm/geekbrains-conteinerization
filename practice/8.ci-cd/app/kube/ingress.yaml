@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: geekbrains
+spec:
+  rules:
+    - host: <CHANGE ME>
+      http:
+        paths:
+          - backend:
+              serviceName: app
+              servicePort: 8000
+            path: /users
