@@ -2,24 +2,27 @@
 
 ## Подготовка
 
-* Регистрируем аккаунт [GitLab](https://gitlab.com/users/sign_up)
-* Добавляем свой SSH-ключ
+* Зарегистрируйте аккаунт [GitLab](https://gitlab.com/users/sign_up)
+* добавьте в настройках своего аккаунта на Gitlab.com свой публичный SSH ключ
 
 В правом верхнем углу выбираем **Preferences -> SSH keys** и добавляем SSH ключ
 
 Чтобы вывести содержимае ключа выполните
-```
+
+```bash
 cat ~/.ssh/id_rsa.pub
 ```
 
 Сгенерировать SSH ключ можно командой
-```
+
+```bash
 ssh-keygen
 ```
 
 * Создайте новый проект с именем geekbrains. Если выберете другое имя проекта, в дальнейшем нужно будет также изменить имя Deployment.
 * Скопируйте файлы практики в ваш репозиторий
-```
+
+```bash
 cd app
 git init
 git remote add origin git@gitlab.com:idwarlock/geekbrains.git
@@ -30,6 +33,7 @@ git push -u origin master
 
 ## Настраиваем интеграцию GitLab и Kubernetes
 
+* Переходим в настройки проекта Settings -> CI/CD -> Runners. Отключаем Shared Runners. Мы будем настраивать Specific runners.
 * Создаем нэймспэйс для раннера
 
 ```bash
@@ -39,13 +43,15 @@ kubectl create ns gitlab
 * Меняем регистрационный токен
 Для этого открываем gitlab-runner/gitlab-runner.yaml
 Там ищем <CHANGE ME> и вставляем вместо него токен,
-который мы взяли в настройках проекта на Gitlab
+который мы взяли в настройках проекта на Gitlab (Set up a specific runner manually -> Registration token)
 
 * Применяем манифесты для раннера
 
 ```bash
 kubectl apply --namespace gitlab -f gitlab-runner/gitlab-runner.yaml
 ```
+
+* Обновляем страницу на GitLab, runner должен появиться в списке Available specific runners 
 
 * Создаем нэймспэйсы для приложения
 
@@ -70,7 +76,7 @@ export NAMESPACE=stage; kubectl get secret $(kubectl get sa deploy --namespace $
 export NAMESPACE=prod; kubectl get secret $(kubectl get sa deploy --namespace $NAMESPACE -o jsonpath='{.secrets[0].name}') --namespace $NAMESPACE -o jsonpath='{.data.token}'
 ```
 
-Из этих токенов нужно создать переменные в проекте в Gitlab с именами
+Из этих токенов нужно создать переменные в проекте в Gitlab (Settings -> CI/CD -> Variables) с именами
 K8S_STAGE_CI_TOKEN и K8S_PROD_CI_TOKEN соответственно.
 
 * Создаем секреты для авторизации Kubernetes в Gitlab registry
@@ -80,7 +86,7 @@ kubectl create secret docker-registry gitlab-registry --docker-server=registry.g
 kubectl create secret docker-registry gitlab-registry --docker-server=registry.gitlab.com --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=admin@admin.admin --namespace prod
 ```
 
-* Патчим дефолтный сервис аккаунт для автоматического использование pull secretа
+* Патчим дефолтный сервис аккаунт для автоматического использование pull secret
 
 ```bash
 kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "gitlab-registry"}]}' -n stage
