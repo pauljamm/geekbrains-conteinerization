@@ -33,7 +33,7 @@ git push -u origin master
 
 ## Настраиваем интеграцию GitLab и Kubernetes
 
-* Переходим в настройки проекта Settings -> CI/CD -> Runners. Отключаем Shared Runners. Мы будем настраивать Specific runners.
+* Переходим в настройки проекта **Settings -> CI/CD -> Runners**. Отключаем Shared Runners. Мы будем настраивать Specific runners.
 * Создаем нэймспэйс для раннера
 
 ```bash
@@ -43,7 +43,7 @@ kubectl create ns gitlab
 * Меняем регистрационный токен
 Для этого открываем gitlab-runner/gitlab-runner.yaml
 Там ищем <CHANGE ME> и вставляем вместо него токен,
-который мы взяли в настройках проекта на Gitlab (Set up a specific runner manually -> Registration token)
+который мы взяли в настройках проекта на Gitlab (**Set up a specific runner manually -> Registration token**)
 
 * Применяем манифесты для раннера
 
@@ -76,10 +76,10 @@ export NAMESPACE=stage; kubectl get secret $(kubectl get sa deploy --namespace $
 export NAMESPACE=prod; kubectl get secret $(kubectl get sa deploy --namespace $NAMESPACE -o jsonpath='{.secrets[0].name}') --namespace $NAMESPACE -o jsonpath='{.data.token}'
 ```
 
-Из этих токенов нужно создать переменные в проекте в Gitlab (Settings -> CI/CD -> Variables) с именами
+Из этих токенов нужно создать переменные в проекте в Gitlab (**Settings -> CI/CD -> Variables**) с именами
 K8S_STAGE_CI_TOKEN и K8S_PROD_CI_TOKEN соответственно.
 
-* Создаем секреты для авторизации Kubernetes в Gitlab registry
+* Создаем секреты для авторизации Kubernetes в Gitlab registry. При создании используем Token, созданный в **Settings -> Repository -> Deploy Tokens**.
 
 ```bash
 kubectl create secret docker-registry gitlab-registry --docker-server=registry.gitlab.com --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=admin@admin.admin --namespace stage
