@@ -18,6 +18,15 @@ ssh-keygen
 ```
 
 * Создайте новый проект с именем geekbrains. Если выберете другое имя проекта, в дальнейшем нужно будет также изменить имя Deployment.
+* Скопируйте файлы практики в ваш репозиторий
+```
+cd app
+git init
+git remote add origin git@gitlab.com:idwarlock/geekbrains.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+```
 
 ## Настраиваем интеграцию GitLab и Kubernetes
 
