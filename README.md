@@ -19,7 +19,7 @@
 
 🔹 [The Twelwe-Factor App](https://12factor.net/ru/)
 
-🔹 [GRASP](https://ru.wikipedia.org/wiki/GRASP/)
+🔹 [GRASP](https://ru.wikipedia.org/wiki/GRASP)
 
 🔹 Рекомендую книгу - [Чистая архитектура. Искусство разработки программного обеспечения](https://www.piter.com/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya)
 
