@@ -87,7 +87,11 @@
 
 ## Лекция 3. Введение в Kubernetes
 
-🔹 [kubectl installation](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+>Уважаемые студенты, просьба по возможности до начала занятия поставить себе утилиту для работы с Kubernetes – kubectl.
+>Это можно сделать по инструкциям из официальной документации для вашей ОС.
+>https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+Делаем работу с kubectl удобнее:
 
 🔹 [kubectl auto-complition](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)
 
