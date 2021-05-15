@@ -10,9 +10,9 @@
 
 ## Полезные ссылки
 
-- [Лекция 1. Микросервисы и контейнеры](#Лекция-1.-Микросервисы-и-контейнеры)
-- [Лекция 2. Docker]([#Лекция-2.-Docker)
-- [Лекция 3. Введение в Kubernetes](#Лекция-3.-Введение-в-Kubernetes)
+- [Лекция 1. Микросервисы и контейнеры](#лекция-1-микросервисы-и-контейнеры)
+- [Лекция 2. Docker]([#лекция-2-docker)
+- [Лекция 3. Введение в Kubernetes](#лекция-3-введение-в-kubernetes)
 - Лекция 4. Хранение данных и ресурсы
 - Лекция 5. Сетевые абстракции Kubernetes
 - Лекция 6. Устройство кластера
@@ -86,3 +86,43 @@
 🔹 [Compose file version 2 reference](https://docs.docker.com/compose/compose-file/compose-file-v2/)
 
 ## Лекция 3. Введение в Kubernetes
+
+🔹 [kubectl installation](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+
+🔹 [kubectl auto-complition](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)
+
+🔹 [kubectl aliases](https://github.com/adterskov/kubectl-aliases)
+
+🔹 [kubens - быстрый способ переключения между namespaces в kubectl](https://github.com/ahmetb/kubectx/)
+
+🔹 [kubecolor - раскрашивает вывод kubectl](https://github.com/dty1er/kubecolor/)
+
+Как получить в своё распоряжение полноценный кластер Kubernetes?
+
+**Онлайн сервисы, чтобы немедленно приступить к обучению**
+
+🔹 [Play with Kubernetes](https://labs.play-with-k8s.com/)
+
+🔹 [Katacoda](https://www.katacoda.com/)
+
+**Запустить локальный кластер Kubernetes**
+
+🔹 [Minikube](https://kubernetes.io/ru/docs/tasks/tools/install-minikube/)
+
+🔹 [Minishift (OpenShift)](https://www.okd.io/minishift/)
+
+🔹 [KiND](https://kind.sigs.k8s.io/docs/user/quick-start/)
+
+🔹 [Docker Desktop](https://docs.docker.com/desktop/kubernetes/)
+
+**Запустить кластер Kubernetes в облаке**
+
+🔹 [Google Cloud Platform (300$ на счет за регистрацию)](https://cloud.google.com/free)
+
+🔹 Российские облачные провайдеры Yandex и MCS (mail.ru) периодически дают бонусы на счет, например за прохождение вебинаров
+
+**Установить кластер самостоятельно**
+
+🔹 [Установка в помощью kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
+
+🔹 [Установка с помощью kubesparay](https://kubernetes.io/docs/setup/production-environment/tools/kubespray/)
