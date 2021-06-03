@@ -1,3 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-deployment
+  template:
+    metadata:
+      labels:
+        app: my-deployment
+    spec:
+      containers:
+      - image: nginx:1.20
+        name: nginx
+        ports:
+        - containerPort: 80
         readinessProbe:
           failureThreshold: 3
           httpGet:
@@ -5,7 +25,7 @@
             port: 80
           periodSeconds: 10
           successThreshold: 1
-          timeoutSeconds: 1
+          timeoutSeconds: 60
         livenessProbe:
           failureThreshold: 3
           httpGet:
@@ -13,5 +33,5 @@
             port: 80
           periodSeconds: 10
           successThreshold: 1
-          timeoutSeconds: 1
+          timeoutSeconds: 60
           initialDelaySeconds: 10
