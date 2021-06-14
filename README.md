@@ -165,3 +165,5 @@
 🔹 [Антипаттерны деплоя в Kubernetes. Часть 2](https://habr.com/ru/company/timeweb/blog/560772/)
 
 🔹 [Антипаттерны деплоя в Kubernetes. Часть 3](https://habr.com/ru/company/timeweb/blog/561570/)
+
+🔹 [ПРОЕКТ «ФЕНИКС». КАК DEVOPS УСТРАНЯЕТ ХАОС И УСКОРЯЕТ РАЗВИТИЕ КОМПАНИИ](https://bombora.ru/book/64983/#.)
