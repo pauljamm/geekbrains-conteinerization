@@ -1,5 +1,10 @@
 # Домашнее задание для к уроку 3 - Введение в Kubernetes
 
+Cоздайте namespace kubedoom
+```
+kubectl create ns kubedoom
+```
+
 Напишите deployment для запуска игры **Kube DOOM**.
 
 Приложение должно запускаться из образа
@@ -20,7 +25,7 @@ hostNetwork: true
 serviceAccountName: kubedoom
 ```
 
-Запустите получившийся деплоймент в кластере Kubernetes.
+Запустите получившийся деплоймент в кластере Kubernetes в **namespace kubedoom**.
 Pod не должен самопроизвольно рестартовать.
 
 В случае возникновения проблем смотрите в описание Pod, ReplicaSet, Deployment.
@@ -36,6 +41,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kubedoom
+  namespace: kubedoom
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -48,6 +54,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kubedoom
+    namespace: kubedoom
 ```
 
 Этот манифест создаст в кластере сервисную учетную запись и даст ей права Cluster-admin
