@@ -1,7 +1,6 @@
 # Домашнее задание для к уроку 3 - Введение в Kubernetes
 
-Напишите deployment для запуска сервера для игры Kube DOOM
-[https://github.com/storax/kubedoom](https://github.com/storax/kubedoom)
+Напишите deployment для запуска игры **Kube DOOM**.
 
 Приложение должно запускаться из образа
 ```
@@ -13,10 +12,13 @@ storaxdev/kubedoom:0.5.0
 ```
 Для указания протокола используется поле protocol в описании порта.
 
-В деплойменте должна быть одна реплика, при этом при обновлении образа не должно возникать даунтайма
-(то есть ситуации когда старый под был потушен, а новый еще на стартовал).
+В деплойменте должна быть одна реплика, при этом при обновлении образа не должно одновременно работать две реплики (см. **maxSurge** и **maxUnavailable** из лекции).
 
-См. **maxSurge** и **maxUnavailable** из лекции.
+Добавьте в шаблон контейнера параметры
+```
+hostNetwork: true
+serviceAccountName: kubedoom
+```
 
 Запустите получившийся деплоймент в кластере Kubernetes.
 Pod не должен самопроизвольно рестартовать.
@@ -27,6 +29,33 @@ Pod не должен самопроизвольно рестартовать.
 kubectl describe pod <pod name>
 kubectl logs pod <pod name>
 ```
-Полученный деплоймент загрузите архивом в раздел для домашних заданий к третьему уроку на Geekbrains.
+
+Разверните в кластере манифест:
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubedoom
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubedoom
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: kubedoom
+```
+
+Этот манифест создаст в кластере сервисную учетную запись и даст ей права Cluster-admin
+
+Для подключения к игре вам нужно выполнить **kubectl portforward** и используйте VNC клиент.
+Подробнее о KubeDoom читайте по ссылке:
+https://github.com/storax/kubedoom
+
+Сохраните манифесты в любом публичном Git репозитории, например GitHub, и пришлите ссылку на репозиторий.
 
 Желаю удачи!
