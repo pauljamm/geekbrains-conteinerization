@@ -147,6 +147,10 @@
 
 🔹 [iptables: How Kubernetes Services Direct Traffic to Pods](https://dustinspecker.com/posts/iptables-how-kubernetes-services-direct-traffic-to-pods/)
 
+🔹 [NetworkPolicy Editor](https://cilium.io/blog/2021/02/10/network-policy-editor?utm_source=telegram.me&utm_medium=social&utm_campaign=cilium-predstavil-vizualnyy-redaktor-se)
+
+🔹 [NGINX Ingress Controller Annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/)
+
 ## Лекция 6. Устройство кластера
 
 🔹 [Kubernetes is so Simple You Can Explore it with Curl](https://blog.tilt.dev/2021/03/18/kubernetes-is-so-simple.html)
