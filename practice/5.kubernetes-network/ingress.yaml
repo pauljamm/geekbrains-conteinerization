@@ -5,8 +5,9 @@ metadata:
   name: my-ingress
 spec:
   rules:
-  - http:
+  - host: my-host.local 
+    http:
       paths:
       - backend:
           serviceName: my-service
-          servicePort: 80
+          servicePort: 8080
