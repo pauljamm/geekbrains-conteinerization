@@ -51,6 +51,10 @@
 
 🔹 [Могут ли контейнеры быть безопасными?](https://habr.com/ru/company/oleg-bunin/blog/480630/)
 
+**Различные Container Runtime**
+
+🔹 [Различия между Docker, containerd, CRI-O и runc](https://habr.com/ru/company/domclick/blog/566224/)
+
 ## Лекция 2. Docker
 
 **Docker**
