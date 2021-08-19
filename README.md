@@ -165,6 +165,8 @@
 
 🔹 [Митап "Stateful-приложения в 2020 году"](https://www.youtube.com/watch?v=ykIh4-616Ic&list=PL8D2P0ruohODzihD0D0FZXkVHXtXbb6w3&index=4&ab_channel=HighLoadChannel)
 
+🔹 [Заделываем дыры в кластере Kubernetes](https://www.youtube.com/watch?v=Ik7VqbgpRiQ&ab_channel=DevOpsChannel)
+
 🔹 [Jobs & Cronjobs in Kubernetes Cluster](https://medium.com/avmconsulting-blog/jobs-cronjobs-in-kubernetes-cluster-d0e872e3c8c8)
 
 🔹 [Tоп-10 PromQL запросов для мониторинга Kubernetes](https://habr.com/ru/company/timeweb/blog/562374/)
