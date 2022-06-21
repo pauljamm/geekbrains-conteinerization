@@ -103,17 +103,15 @@
 
 🔹 [kubectl aliases](https://github.com/adterskov/kubectl-aliases)
 
-🔹 [kubens - быстрый способ переключения между namespaces в kubectl](https://github.com/ahmetb/kubectx/)
-
 🔹 [kubecolor - раскрашивает вывод kubectl](https://github.com/dty1er/kubecolor/)
+
+🔹 [kubens - быстрый способ переключения между namespaces в kubectl](https://github.com/ahmetb/kubectx/)
 
 Как получить в своё распоряжение полноценный кластер Kubernetes?
 
 **Онлайн сервисы, чтобы немедленно приступить к обучению**
 
 🔹 [Play with Kubernetes](https://labs.play-with-k8s.com/)
-
-🔹 [Katacoda](https://www.katacoda.com/)
 
 **Запустить локальный кластер Kubernetes**
 
