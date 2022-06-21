@@ -29,8 +29,6 @@
 
 🔹 [Play with Docker](https://labs.play-with-docker.com/)
 
-🔹 [Katacoda](https://www.katacoda.com/)
-
 **Паттерны проектирования**
 
 🔹 [The Twelwe-Factor App](https://12factor.net/ru/)
