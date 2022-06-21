@@ -47,9 +47,9 @@
 
 🔹 [Cgroups](https://habr.com/ru/company/selectel/blog/303190/)
 
-🔹 [Capabilities](https://habr.com/ru/company/otus/blog/471802/)
+🔹 [Capabilities](https://k3a.me/linux-capabilities-in-a-nutshell/)
 
-🔹 [Могут ли контейнеры быть безопасными?](https://habr.com/ru/company/oleg-bunin/blog/480630/)
+🎥 [Могут ли контейнеры быть безопасными?](https://habr.com/ru/company/oleg-bunin/blog/480630/)
 
 **Различные Container Runtime**
 
@@ -161,9 +161,9 @@
 
 ## Лекция 7. Продвинутые абстракции
 
-🔹 [Митап "Stateful-приложения в 2020 году"](https://www.youtube.com/watch?v=ykIh4-616Ic&list=PL8D2P0ruohODzihD0D0FZXkVHXtXbb6w3&index=4&ab_channel=HighLoadChannel)
+🎥 [Митап "Stateful-приложения в 2020 году"](https://www.youtube.com/watch?v=ykIh4-616Ic&list=PL8D2P0ruohODzihD0D0FZXkVHXtXbb6w3&index=4&ab_channel=HighLoadChannel)
 
-🔹 [Заделываем дыры в кластере Kubernetes](https://www.youtube.com/watch?v=Ik7VqbgpRiQ&ab_channel=DevOpsChannel)
+🎥 [Заделываем дыры в кластере Kubernetes](https://www.youtube.com/watch?v=Ik7VqbgpRiQ&ab_channel=DevOpsChannel)
 
 🔹 [Jobs & Cronjobs in Kubernetes Cluster](https://medium.com/avmconsulting-blog/jobs-cronjobs-in-kubernetes-cluster-d0e872e3c8c8)
 
