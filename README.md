@@ -75,6 +75,8 @@
 
 🔹 [ENTRYPOINT vs CMD: назад к основам](https://habr.com/ru/company/southbridge/blog/329138/)
 
+🔹 [ADD vs COPY](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy)
+
 🔹 [Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
 
 🔹 [Use multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
