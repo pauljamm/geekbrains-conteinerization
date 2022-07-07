@@ -8,5 +8,5 @@ https://mcs.mail.ru/docs/base/k8s/k8s-pvc
 kubectl get storageclasses.storage.k8s.io
 ```
 
-Вы можете менять политику persistentVolumeReclaimPolicy тем самым указывая нужно ли сохранять данные после удаления pods или нет
-https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaim-policy
+<br>Вы можете менять политику persistentVolumeReclaimPolicy тем самым указывая нужно ли сохранять данные после удаления pods или нет
+<br>https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reclaim-policy
