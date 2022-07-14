@@ -109,7 +109,7 @@ kubectl apply --namespace prod -f app/kube/postgres/
 
 * Меняем хост в ингрессе приложения и применяем манифесты
 Для этого открываем app/kube/ingress.yaml
-Там ищем <CHANGE ME> и вставляем вместо него stage
+Там ищем плейсхолдер "CHANGE ME" и вставляем вместо него stage
 
 Далее применяем на stage
 
