@@ -85,7 +85,7 @@ export NAMESPACE=prod; kubectl get secret $(kubectl get sa deploy --namespace $N
 K8S_STAGE_CI_TOKEN и K8S_PROD_CI_TOKEN соответственно.
 
 * Создаем секреты для авторизации Kubernetes в Gitlab registry. При создании используем Token, созданный в **Settings -> Repository -> Deploy Tokens**.
-
+(read_registry, write_registry permissions)
 ```bash
 kubectl create secret docker-registry gitlab-registry --docker-server=registry.gitlab.com --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=admin@admin.admin --namespace stage
 kubectl create secret docker-registry gitlab-registry --docker-server=registry.gitlab.com --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=admin@admin.admin --namespace prod
