@@ -5,22 +5,12 @@ kind: ServiceAccount
 metadata:
   annotations:
   name: release-name-gitlab-runner
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 ---
 # Source: gitlab-runner/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: "release-name-gitlab-runner"
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 type: Opaque
 data:
   runner-registration-token: <CHANGE ME>
@@ -31,11 +21,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: release-name-gitlab-runner
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 data:
   entrypoint: |
     #!/bin/bash
@@ -148,11 +133,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: "Role"
 metadata:
   name: release-name-gitlab-runner
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 rules:
 - apiGroups: [""]
   resources: ["*"]
@@ -163,11 +143,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: "RoleBinding"
 metadata:
   name: release-name-gitlab-runner
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: "Role"
@@ -181,11 +156,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: release-name-gitlab-runner
-  labels:
-    app: release-name-gitlab-runner
-    chart: gitlab-runner-0.42.0
-    release: "release-name"
-    heritage: "Helm"
 spec:
   replicas: 1
   revisionHistoryLimit: 10
