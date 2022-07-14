@@ -175,6 +175,8 @@
 
 ## Лекция 8. Деплой тестового приложения в кластер
 
+🔹 [Запуск проекта в Kubernetes за 60 минут](https://mcs.mail.ru/blog/launching-a-project-in-kubernetes)
+
 🔹 [Антипаттерны деплоя в Kubernetes. Часть 1](https://habr.com/ru/company/timeweb/blog/557320/)
 
 🔹 [Антипаттерны деплоя в Kubernetes. Часть 2](https://habr.com/ru/company/timeweb/blog/560772/)
