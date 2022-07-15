@@ -12,7 +12,7 @@ kind: Secret
 metadata:
   name: "release-name-gitlab-runner"
 type: Opaque
-data:
+stringData:
   runner-registration-token: <CHANGE ME>
   runner-token: ""
 ---
