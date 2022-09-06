@@ -1,26 +1,25 @@
 ---
-# Source: gitlab-runner/templates/service-account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  annotations:
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 ---
-# Source: gitlab-runner/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: "release-name-gitlab-runner"
+  name: gitlab-runner
+  namespace: gitlab
 type: Opaque
-stringData:
-  runner-registration-token: <CHANGE ME>
+data:
+  runner-registration-token: "Enter your registration key here"
   runner-token: ""
 ---
-# Source: gitlab-runner/templates/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 data:
   entrypoint: |
     #!/bin/bash
@@ -90,6 +89,7 @@ data:
   config.template.toml:   |
     [[runners]]
       [runners.kubernetes]
+        namespace = "gitlab"
         image = "ubuntu:16.04"
 
 
@@ -128,59 +128,54 @@ data:
 
   pre-entrypoint-script: |
 ---
-# Source: gitlab-runner/templates/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
-kind: "Role"
+kind: Role
 metadata:
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 rules:
 - apiGroups: [""]
   resources: ["*"]
   verbs: ["*"]
 ---
-# Source: gitlab-runner/templates/role-binding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
-kind: "RoleBinding"
+kind: RoleBinding
 metadata:
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: "Role"
-  name: release-name-gitlab-runner
+  kind: Role
+  name: gitlab-runner
 subjects:
 - kind: ServiceAccount
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 ---
-# Source: gitlab-runner/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-gitlab-runner
+  name: gitlab-runner
+  namespace: gitlab
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: release-name-gitlab-runner
+      app: gitlab-runner
   template:
     metadata:
       labels:
-        app: release-name-gitlab-runner
-        chart: gitlab-runner-0.42.0
-        release: "release-name"
-        heritage: "Helm"
-      annotations:
-        checksum/configmap: 4a073fcbb21539976807eb141e2f03d5678c7abf3525a59f0f67e6ce76450f11
-        checksum/secrets: eceba4d4f14249f0fcb11c0c0e747b2acb2fc20af826bc2f917fc707af0d963c
+        app: gitlab-runner
     spec:
       securityContext:
         fsGroup: 65533
         runAsUser: 100
       terminationGracePeriodSeconds: 3600
-      serviceAccountName: release-name-gitlab-runner
+      serviceAccountName: gitlab-runner
       containers:
-      - name: release-name-gitlab-runner
-        image: registry.gitlab.com/gitlab-org/gitlab-runner:alpine-v15.1.0
+      - name: gitlab-runner
+        image: registry.gitlab.com/gitlab-org/gitlab-runner:alpine-v15.3.0
         imagePullPolicy: "IfNotPresent"
         securityContext:
           allowPrivilegeEscalation: false
@@ -200,9 +195,8 @@ spec:
               command: ["/entrypoint", "unregister", "--all-runners"]
         command: ["/usr/bin/dumb-init", "--", "/bin/bash", "/configmaps/entrypoint"]
         env:
-
         - name: CI_SERVER_URL
-          value: "https://gitlab.com"
+          value: "https://gitlab.com/"
         - name: CLONE_URL
           value: ""
         - name: RUNNER_EXECUTOR
@@ -211,8 +205,6 @@ spec:
           value: "true"
         - name: RUNNER_TAG_LIST
           value: ""
-        - name: KUBERNETES_PRIVILEGED
-          value: "true"
         livenessProbe:
           exec:
             command: ["/bin/bash", "/configmaps/check-live"]
@@ -252,7 +244,7 @@ spec:
         projected:
           sources:
             - secret:
-                name: "release-name-gitlab-runner"
+                name: "gitlab-runner"
                 items:
                   - key: runner-registration-token
                     path: runner-registration-token
@@ -260,4 +252,4 @@ spec:
                     path: runner-token
       - name: configmaps
         configMap:
-          name: release-name-gitlab-runner
+          name: gitlab-runner
