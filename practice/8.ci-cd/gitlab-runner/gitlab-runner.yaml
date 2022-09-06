@@ -12,7 +12,7 @@ metadata:
   namespace: gitlab
 type: Opaque
 data:
-  runner-registration-token: "Enter your registration key here"
+  runner-registration-token: "Enter your registration token here"
   runner-token: ""
 ---
 apiVersion: v1
