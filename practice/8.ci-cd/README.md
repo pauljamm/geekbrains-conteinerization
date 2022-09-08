@@ -29,11 +29,11 @@ ssh-keygen
 
 ```bash
 cd app
-git init
-git remote add origin git@gitlab.com:<your_gitlab_account>/geekbrains.git
+git init --initial-branch=main
+git remote add origin https://gitlab.com/<your_account>/geekbrains.git
 git add .
 git commit -m "Initial commit"
-git push -u origin master
+git push -u origin main
 ```
 
 ## Настраиваем интеграцию GitLab и Kubernetes
