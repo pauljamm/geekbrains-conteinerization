@@ -11,7 +11,7 @@ metadata:
   name: gitlab-runner
   namespace: gitlab
 type: Opaque
-data:
+stringData:
   runner-registration-token: "Enter your registration token here"
   runner-token: ""
 ---
