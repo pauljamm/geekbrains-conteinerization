@@ -101,7 +101,7 @@
 
 Делаем работу с kubectl удобнее:
 
-🔹 [kubectl auto-complition](https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/)
+🔹 [kubectl auto-complition](https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/#%D0%B2%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B0%D0%B2%D1%82%D0%BE%D0%B4%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F-%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0-shell)
 
 🔹 [kubectl aliases](https://github.com/adterskov/kubectl-aliases)
 
