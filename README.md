@@ -149,6 +149,8 @@
 
 🔹 [NGINX Ingress Controller Annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/)
 
+🔹 [NGINX Ingress Controller Regular expressions in paths](https://kubernetes.github.io/ingress-nginx/user-guide/ingress-path-matching/)
+
 ## Лекция 6. Устройство кластера
 
 🔹 [Kubernetes is so Simple You Can Explore it with Curl](https://blog.tilt.dev/2021/03/18/kubernetes-is-so-simple.html)
