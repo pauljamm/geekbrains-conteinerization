@@ -36,7 +36,7 @@ metadata:
   name: prometheus
   namespace: default
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: prometheus
@@ -46,7 +46,7 @@ rules:
   - nodes
   verbs: ["get", "list", "watch"]
 ---  
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: prometheus
@@ -66,7 +66,7 @@ subjects:
 volumeClaimTemplate - ReadWriteOnce, 5Gi, подключенный по пути /prometheus
 Подключение конфигмапа с настройками выше по пути /etc/prometheus
 
-Так же в этом стейтфулсете нужно объявить initContainer для изменения прав на вольюм data на 777.
+Так же в этом стейтфулсете нужно объявить initContainer для изменения права на 777 для каталога /prometheus.
 См пример из лекции 4: practice/4.resources-and-persistence/persistence/deployment.yaml
 
 > Не забудьте указать обязательное поле serviceName

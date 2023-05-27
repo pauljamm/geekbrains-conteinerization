@@ -3,60 +3,33 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: gitlab-runner
-  labels:
-    app: gitlab-runner
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: gitlab-runner
-  labels:
-    app: gitlab-runner
-rules:
-- apiGroups: [""]
-  resources: ["*"]
-  verbs: ["*"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: gitlab-runner
-  labels:
-    app: gitlab-runner
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: gitlab-runner
-subjects:
-- kind: ServiceAccount
-  name: gitlab-runner
   namespace: gitlab
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: gitlab-runner
-  labels:
-    app: gitlab-runner
+  namespace: gitlab
 type: Opaque
 stringData:
-  runner-registration-token: <CHANGE ME>
+  runner-registration-token: GR1348941vUzpmh_Yi_Sh-EEEuHDa
   runner-token: ""
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: gitlab-runner
-  labels:
-    app: gitlab-runner
+  namespace: gitlab
 data:
   entrypoint: |
     #!/bin/bash
     set -e
-    mkdir -p /home/gitlab-runner/.gitlab-runner/
-    cp /scripts/config.toml /home/gitlab-runner/.gitlab-runner/
 
-    # Register the runner
+    mkdir -p /home/gitlab-runner/.gitlab-runner/
+
+    cp /configmaps/config.toml /home/gitlab-runner/.gitlab-runner/
+
+    # Set up environment variables for cache
     if [[ -f /secrets/accesskey && -f /secrets/secretkey ]]; then
       export CACHE_S3_ACCESS_KEY=$(cat /secrets/accesskey)
       export CACHE_S3_SECRET_KEY=$(cat /secrets/secretkey)
@@ -74,6 +47,11 @@ data:
       fi
     fi
 
+    if [[ -f /secrets/azure-account-name && -f /secrets/azure-account-key ]]; then
+      export CACHE_AZURE_ACCOUNT_NAME=$(cat /secrets/azure-account-name)
+      export CACHE_AZURE_ACCOUNT_KEY=$(cat /secrets/azure-account-key)
+    fi
+
     if [[ -f /secrets/runner-registration-token ]]; then
       export REGISTRATION_TOKEN=$(cat /secrets/runner-registration-token)
     fi
@@ -82,7 +60,19 @@ data:
       export CI_SERVER_TOKEN=$(cat /secrets/runner-token)
     fi
 
-    if ! sh /scripts/register-the-runner; then
+    # Validate this also at runtime in case the user has set a custom secret
+    if [[ ! -z "$CI_SERVER_TOKEN" && "1" -ne "1" ]]; then
+      echo "Using a runner token with more than 1 replica is not supported."
+      exit 1
+    fi
+
+    # Register the runner
+    if ! sh /configmaps/register-the-runner; then
+      exit 1
+    fi
+
+    # Run pre-entrypoint-script
+    if ! bash /configmaps/pre-entrypoint-script; then
       exit 1
     fi
 
@@ -91,12 +81,18 @@ data:
       --working-directory=/home/gitlab-runner
 
   config.toml: |
-    concurrent = 3
+    concurrent = 10
     check_interval = 30
     log_level = "info"
-  configure: |
-    set -e
-    cp /init-secrets/* /secrets
+
+
+  config.template.toml:   |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "gitlab"
+        image = "ubuntu:16.04"
+
+
   register-the-runner: |
     #!/bin/bash
     MAX_REGISTER_ATTEMPTS=30
@@ -104,6 +100,7 @@ data:
     for i in $(seq 1 "${MAX_REGISTER_ATTEMPTS}"); do
       echo "Registration attempt ${i} of ${MAX_REGISTER_ATTEMPTS}"
       /entrypoint register \
+        --template-config /configmaps/config.template.toml \
         --non-interactive
 
       retval=$?
@@ -114,7 +111,7 @@ data:
         exit 1
       fi
 
-      sleep 5 
+      sleep 5
     done
 
     exit 0
@@ -128,15 +125,41 @@ data:
     else
       exit 1
     fi
+
+  pre-entrypoint-script: |
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitlab-runner
+  namespace: gitlab
+rules:
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitlab-runner
+  namespace: gitlab
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitlab-runner
+subjects:
+- kind: ServiceAccount
+  name: gitlab-runner
+  namespace: gitlab
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gitlab-runner
-  labels:
-    app: gitlab-runner
+  namespace: gitlab
 spec:
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: gitlab-runner
@@ -146,161 +169,45 @@ spec:
         app: gitlab-runner
     spec:
       securityContext:
-        runAsUser: 100
         fsGroup: 65533
+        runAsUser: 100
       terminationGracePeriodSeconds: 3600
-      initContainers:
-      - name: configure
-        command: ['sh', '/config/configure']
-        image: gitlab/gitlab-runner:alpine-v13.2.0
-        imagePullPolicy: "IfNotPresent"
-        env:
-        - name: CI_SERVER_URL
-          value: "https://gitlab.com/"
-        - name: CLONE_URL
-          value: ""
-        - name: RUNNER_REQUEST_CONCURRENCY
-          value: "1"
-        - name: RUNNER_EXECUTOR
-          value: "kubernetes"
-        - name: REGISTER_LOCKED
-          value: "true"
-        - name: RUNNER_TAG_LIST
-          value: ""
-        - name: RUNNER_OUTPUT_LIMIT
-          value: "4096"
-        - name: KUBERNETES_IMAGE
-          value: "ubuntu:16.04"
-        - name: KUBERNETES_PRIVILEGED
-          value: "true"
-        - name: KUBERNETES_NAMESPACE
-          value: "gitlab"
-        - name: KUBERNETES_POLL_TIMEOUT
-          value: "180"
-        - name: KUBERNETES_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_CPU_LIMIT_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_MEMORY_LIMIT_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_CPU_REQUEST_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_MEMORY_REQUEST_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_SERVICE_ACCOUNT
-          value: ""
-        - name: KUBERNETES_SERVICE_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_SERVICE_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_SERVICE_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_SERVICE_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_HELPER_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_HELPER_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_IMAGE
-          value: ""
-        - name: KUBERNETES_PULL_POLICY
-          value: ""
-        volumeMounts:
-        - name: runner-secrets
-          mountPath: /secrets
-          readOnly: false
-        - name: scripts
-          mountPath: /config
-          readOnly: true
-        - name: init-runner-secrets
-          mountPath: /init-secrets
-          readOnly: true
-        resources:
-          {}
       serviceAccountName: gitlab-runner
       containers:
       - name: gitlab-runner
-        image: gitlab/gitlab-runner:alpine-v13.2.0
+        image: registry.gitlab.com/gitlab-org/gitlab-runner:alpine-v15.3.0
         imagePullPolicy: "IfNotPresent"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/entrypoint", "unregister", "--config=/home/gitlab-runner/.gitlab-runner/config.toml"]
         lifecycle:
           preStop:
             exec:
               command: ["/entrypoint", "unregister", "--all-runners"]
-        command: ["/bin/bash", "/scripts/entrypoint"]
+        command: ["/usr/bin/dumb-init", "--", "/bin/bash", "/configmaps/entrypoint"]
         env:
         - name: CI_SERVER_URL
           value: "https://gitlab.com/"
         - name: CLONE_URL
           value: ""
-        - name: RUNNER_REQUEST_CONCURRENCY
-          value: "1"
         - name: RUNNER_EXECUTOR
           value: "kubernetes"
         - name: REGISTER_LOCKED
           value: "true"
         - name: RUNNER_TAG_LIST
           value: ""
-        - name: RUNNER_OUTPUT_LIMIT
-          value: "4096"
-        - name: KUBERNETES_IMAGE
-          value: "ubuntu:16.04"
-        - name: KUBERNETES_PRIVILEGED
-          value: "true"
-        - name: KUBERNETES_NAMESPACE
-          value: "gitlab"
-        - name: KUBERNETES_POLL_TIMEOUT
-          value: "180"
-        - name: KUBERNETES_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_CPU_LIMIT_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_MEMORY_LIMIT_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_CPU_REQUEST_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_MEMORY_REQUEST_OVERWRITE_MAX_ALLOWED
-          value: ""
-        - name: KUBERNETES_SERVICE_ACCOUNT
-          value: ""
-        - name: KUBERNETES_SERVICE_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_SERVICE_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_SERVICE_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_SERVICE_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_CPU_LIMIT
-          value: ""
-        - name: KUBERNETES_HELPER_MEMORY_LIMIT
-          value: ""
-        - name: KUBERNETES_HELPER_CPU_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_MEMORY_REQUEST
-          value: ""
-        - name: KUBERNETES_HELPER_IMAGE
-          value: ""
-        - name: KUBERNETES_PULL_POLICY
-          value: ""
         livenessProbe:
           exec:
-            command: ["/bin/bash", "/scripts/check-live"]
+            command: ["/bin/bash", "/configmaps/check-live"]
           initialDelaySeconds: 60
           timeoutSeconds: 1
           periodSeconds: 10
@@ -315,15 +222,15 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         ports:
-        - name: metrics
+        - name: "metrics"
           containerPort: 9252
         volumeMounts:
-        - name: runner-secrets
+        - name: projected-secrets
           mountPath: /secrets
         - name: etc-gitlab-runner
           mountPath: /home/gitlab-runner/.gitlab-runner
-        - name: scripts
-          mountPath: /scripts
+        - name: configmaps
+          mountPath: /configmaps
         resources:
           {}
       volumes:
@@ -333,7 +240,7 @@ spec:
       - name: etc-gitlab-runner
         emptyDir:
           medium: "Memory"
-      - name: init-runner-secrets
+      - name: projected-secrets
         projected:
           sources:
             - secret:
@@ -343,6 +250,6 @@ spec:
                     path: runner-registration-token
                   - key: runner-token
                     path: runner-token
-      - name: scripts
+      - name: configmaps
         configMap:
           name: gitlab-runner

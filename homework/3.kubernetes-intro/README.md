@@ -1,17 +1,66 @@
 # Домашнее задание для к уроку 3 - Введение в Kubernetes
 
-Напишите deployment для запуска сервера для игры Factorio (https://factorio.com/).
+Cоздайте namespace kubedoom
+```
+kubectl create ns kubedoom
+```
 
-Приложение должно запускаться из образа factoriotools/factorio:0.18.34
+Напишите deployment для запуска игры **Kube DOOM**.
 
-Должны быть описаны два порта:
+Приложение должно запускаться из образа
+```
+storaxdev/kubedoom:0.5.0
+```
+Должен быть описан порт:
+```
+5900 TCP
+```
+Для указания протокола используется поле protocol в описании порта.
 
-- 34197 UDP
-- 27015 TCP
+В деплойменте должна быть одна реплика, при этом при обновлении образа не должно одновременно работать две реплики (см. **maxSurge** и **maxUnavailable** из лекции).
 
-> Для указания протокола используется поле protocol в описании порта.
+Добавьте в шаблон контейнера параметры
+```
+hostNetwork: true
+serviceAccountName: kubedoom
+```
 
-В деплойменте должна быть одна реплика, при этом при обновлении образа не должно возникать даунтайма
-(то есть ситуации когда старый под был потушен, а новый еще на стартовал).
+Запустите получившийся деплоймент в кластере Kubernetes в **namespace kubedoom**.
+Pod не должен самопроизвольно рестартовать.
 
-> См maxSurge maxUnavailable из лекции.
+В случае возникновения проблем смотрите в описание Pod, ReplicaSet, Deployment.
+Например:
+```
+kubectl describe pod <pod name>
+kubectl logs pod <pod name>
+```
+
+Разверните в кластере манифест:
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubedoom
+  namespace: kubedoom
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubedoom
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: kubedoom
+    namespace: kubedoom
+```
+
+Этот манифест создаст в кластере сервисную учетную запись и даст ей права Cluster-admin
+
+Для подключения к игре вам нужно выполнить **kubectl portforward** и используйте VNC клиент. Пароль для подключения - **idbehold**
+
+Сохраните манифесты в любом публичном Git репозитории, например GitHub, и пришлите ссылку на репозиторий.
+
+Желаю удачи!

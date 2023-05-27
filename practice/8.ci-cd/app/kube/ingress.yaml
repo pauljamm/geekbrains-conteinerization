@@ -1,13 +1,21 @@
-apiVersion: extensions/v1beta1
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: geekbrains
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: <CHANGE ME>
-      http:
-        paths:
-          - backend:
-              serviceName: geekbrains
-              servicePort: 8000
-            path: /users
+  - host: prod
+    http:
+      paths:
+      - path: "/users"
+        pathType: Prefix
+        backend:
+          service:
+            name: geekbrains
+            port:
+              number: 8000
+              
